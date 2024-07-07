@@ -1,0 +1,21 @@
+{
+  "name": "no-npm",
+  "scripts": {
+    "clear-dist": "rm -rf ../dist",
+    "prep-node-modules": "cd .. && rm -rf node_modules && ln -s ./.brahma/node_modules node_modules && cd .brahma",
+    "build": "bun run clear-dist && bun run prep-node-modules && bun run ./build.ts",
+    "dev": "bun run build & npx http-server ../dist"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/jsdom": "^21.1.7",
+    "jsdom": "^24.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@ckzero/maya": "npm:@jsr/ckzero__maya@^0.1.0",
+    "@ckzero/value-utils": "npm:@jsr/ckzero__value-utils@^0.1.0"
+  }
+}
