@@ -20,7 +20,7 @@ export const registerRemovePackage = (cli) => {
       }
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
-      await execAsync(`bun remove ${packageName}`);
+      await execAsync(`npx bun remove ${packageName}`);
       process.chdir("../");
       await syncConfigWithDependencies();
       await refreshNodeModules();

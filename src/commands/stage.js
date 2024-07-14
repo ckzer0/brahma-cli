@@ -18,7 +18,7 @@ export const registerStage = (cli) => {
         - in the page opened in browser, click on 'stage'
         - the app is being served on http://127.0.0.1:[port_number]/stage\n\nPress Ctrl+C or Ctrl+\\ to exit\n`
       );
-      await execAsync("bun run stage");
+      await execAsync("npx bun run stage");
       process.chdir("../");
     });
 };

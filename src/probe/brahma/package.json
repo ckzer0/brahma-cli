@@ -1,12 +1,13 @@
 {
   "name": "",
   "scripts": {
-    "stage": "bun run ./src/watch.ts"
+    "stage": "npx bun run ./src/watch.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/jsdom": "^21.1.7",
-    "jsdom": "^24.1.0"
+    "jsdom": "^24.1.0",
+    "bun": "^1.1.20"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
