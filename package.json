@@ -1,11 +1,8 @@
 {
-  "name": "brahma-cli",
+  "name": "@ckzer0/brahma-cli",
   "version": "0.1.0",
   "description": "Cli tool to generate and develop Maya apps",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "bin": {
     "brahma": "./src/bin/index.js"
   },
