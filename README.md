@@ -7,7 +7,7 @@ Cli tool to generate and develop Maya apps.
 ## Installation
 
 ```bash
-`npm install -g @ckzer0/brahma-cli`
+npm install -g @ckzer0/brahma-cli
 ```
 
 ## Usage
