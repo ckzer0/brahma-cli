@@ -1,10 +1,12 @@
 import { generateStaticHtml, getDefaultHtml } from "@ckzero/maya/web";
-import { readdir, lstat } from "node:fs/promises";
+import { readdir, lstat, rmdir, exists } from "fs/promises";
 
-const ROOT_DIR = process.cwd().replace("/.brahma", "");
+let buildCallCounter = 0;
+
+export const ROOT_DIR = process.cwd().replace("/.brahma", "");
 console.log(ROOT_DIR);
 const APP_SOURCE_DIR = `${ROOT_DIR}/app`;
-const DESTINATION_DIR = `${ROOT_DIR}/dist`;
+const DESTINATION_DIR = `${ROOT_DIR}/stage`;
 
 const HTML_FILE_SRC = "app.ts";
 const HTML_FILE_DEST = "index.html";
@@ -14,7 +16,7 @@ const JS_FILE_DEST = "main.js";
 const NO_HTML_ERROR = "no html";
 const NO_JS_ERROR = "no js";
 
-const getJoinedPath = (rootDir: string, relativePath: string) =>
+export const getJoinedPath = (rootDir: string, relativePath: string) =>
   `${rootDir}/${relativePath}`.replace("//", "/");
 
 const getFilesAndFolders = async (
@@ -97,6 +99,9 @@ const buildFiles = async (relativePath: string, files: string[]) => {
 };
 
 const buildFolder = async (currentRelativePath: string) => {
+  if (currentRelativePath === "") {
+    console.log(`\nbuild called ${++buildCallCounter} times\n`);
+  }
   const { files, folders } = await getFilesAndFolders(currentRelativePath);
 
   await buildFiles(currentRelativePath, files);
@@ -107,4 +112,8 @@ const buildFolder = async (currentRelativePath: string) => {
   }
 };
 
-buildFolder("");
+export const reBuildApp = async () => {
+  const distExists = await exists(DESTINATION_DIR);
+  if (distExists) await rmdir(DESTINATION_DIR, { recursive: true });
+  await buildFolder("");
+};

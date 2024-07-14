@@ -2,13 +2,12 @@
   "name": "brahma-cli",
   "version": "0.1.0",
   "description": "Cli tool to generate and develop Maya apps",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "brahma": "./index.js"
+    "brahma": "./src/bin/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/ckzer0/brahma-cli/issues"
   },
-  "homepage": "https://github.com/ckzer0/brahma-cli#readme"
+  "homepage": "https://github.com/ckzer0/brahma-cli#readme",
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
 }
