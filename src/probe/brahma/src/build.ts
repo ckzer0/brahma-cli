@@ -1,6 +1,5 @@
 import { generateStaticHtml, getDefaultHtml } from "@ckzero/maya/web";
 import { readdir, lstat, rmdir, exists } from "fs/promises";
-import * as bun from "bun";
 
 let buildCallCounter = 0;
 
@@ -50,11 +49,11 @@ const buildHtml = async (htmlSrc: string, htmlDest: string) => {
   const html = getDefaultHtml(appOuterHtml);
   if (!html) throw new Error(NO_HTML_ERROR);
 
-  await bun.write(htmlDest, html);
+  await Bun.write(htmlDest, html);
 };
 
 const buildJs = async (jsSrc: string, jsDest: string, destDir: string) => {
-  const jsBuild = await bun.build({
+  const jsBuild = await Bun.build({
     entrypoints: [jsSrc],
     outdir: destDir,
     splitting: true,
@@ -65,7 +64,7 @@ const buildJs = async (jsSrc: string, jsDest: string, destDir: string) => {
     throw new Error(NO_JS_ERROR);
   }
 
-  await bun.write(jsDest, js);
+  await Bun.write(jsDest, js);
 };
 
 const buildFiles = async (relativePath: string, files: string[]) => {
@@ -94,8 +93,8 @@ const buildFiles = async (relativePath: string, files: string[]) => {
     const fileSrc = getJoinedPath(srcDir, file);
     const fileDest = getJoinedPath(destDir, file);
 
-    const content = await bun.file(fileSrc).text();
-    await bun.write(fileDest, content);
+    const content = await Bun.file(fileSrc).text();
+    await Bun.write(fileDest, content);
   }
 };
 

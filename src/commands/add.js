@@ -17,7 +17,7 @@ export const registerAddPackage = (cli) => {
       }
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
-      await execAsync(`npx bun add ${packageName}`);
+      await execAsync(`bun add ${packageName}`);
       process.chdir("../");
       await syncConfigWithDependencies();
       await refreshNodeModules();
