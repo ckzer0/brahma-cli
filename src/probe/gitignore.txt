@@ -1,4 +1,6 @@
 .brahma
-.gitignore
 node_modules
 stage
+
+.env
+.DS_Store

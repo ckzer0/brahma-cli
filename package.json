@@ -3,26 +3,27 @@
   "version": "0.1.0",
   "description": "Cli tool to generate and develop Maya apps",
   "type": "module",
-  "bin": {
-    "brahma": "./src/bin/index.js"
-  },
+  "author": "Chandan Kumar",
+  "license": "MIT",
+  "homepage": "https://github.com/ckzer0/brahma-cli#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ckzer0/brahma-cli.git"
   },
-  "keywords": [
-    "brahma",
-    "maya",
-    "js",
-    "ts"
-  ],
-  "author": "Chandan Kumar",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ckzer0/brahma-cli/issues"
   },
-  "homepage": "https://github.com/ckzer0/brahma-cli#readme",
   "dependencies": {
     "commander": "^12.1.0"
-  }
+  },
+  "bin": {
+    "brahma": "./src/bin/index.js"
+  },
+  "keywords": [
+    "@ckzer0",
+    "brahma-cli",
+    "brahma",
+    "maya",
+    "ts"
+  ]
 }
