@@ -113,7 +113,7 @@ const buildFolder = async (currentRelativePath: string) => {
 };
 
 export const reBuildApp = async () => {
-  const distExists = await exists(DESTINATION_DIR);
-  if (distExists) await rmdir(DESTINATION_DIR, { recursive: true });
+  const destExists = await exists(DESTINATION_DIR);
+  if (destExists) await rmdir(DESTINATION_DIR, { recursive: true });
   await buildFolder("");
 };

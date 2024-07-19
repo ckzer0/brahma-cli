@@ -5,9 +5,10 @@ import {
   registerAddPackage,
   registerAnythingElse,
   registerCreate,
-  registerInstall,
   registerInit,
+  registerInstall,
   registerRemovePackage,
+  registerReset,
   registerStage,
 } from "../commands/index.js";
 
@@ -22,6 +23,7 @@ registerStage(cli);
 registerAddPackage(cli);
 registerRemovePackage(cli);
 registerAnythingElse(cli);
+registerReset(cli);
 
 // Execute the CLI witht the given arguments
 cli.parse(process.argv);

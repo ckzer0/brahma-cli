@@ -15,5 +15,8 @@ export const createDirIfNotExists = async (appName) => {
   if (existsSync(appName)) {
     throw new Error(`Directory '${appName}' already exists.`);
   }
+  if (typeof appName !== "string" || appName === "") {
+    throw new Error(`Invalid directory name - '${appName}'`);
+  }
   await mkdir(appName);
 };

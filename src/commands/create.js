@@ -1,25 +1,16 @@
-import { cp } from "node:fs/promises";
-import { createDirIfNotExists, execAsync, getPath } from "../libs/index.js";
-
-const copyProbeToAppDir = async () => {
-  const probeVSCodeConfigDir = getPath("../probe/maya.config.json");
-  const localVSCodeConfigDir = `${process.cwd()}/maya.config.json`;
-  await cp(probeVSCodeConfigDir, localVSCodeConfigDir, { recursive: true });
-
-  const probeAppDir = getPath("../probe/sample-app");
-  const localAppDir = `${process.cwd()}/app`;
-  await cp(probeAppDir, localAppDir, { recursive: true });
-};
+import { createDirIfNotExists, execAsync } from "../libs/index.js";
 
 export const registerCreate = (cli) => {
   cli
     .command("create <appName>")
+    // .description(
+    //   "Initializes files of new maya app or reset files to inital state"
+    // )
     .description("Creates a new maya app")
     .action(async (appName) => {
       await createDirIfNotExists(appName);
       const appDir = `${process.cwd()}/${appName}`;
       process.chdir(appDir);
-      await copyProbeToAppDir();
       await execAsync("brahma init");
       await execAsync("brahma install");
       process.chdir("../");

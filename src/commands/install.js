@@ -15,6 +15,7 @@ export const registerInstall = (cli) => {
       }
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
+      console.log("Running 'brahma install'.\nInstalling packages...");
       await execAsync("bun i");
       process.chdir("../");
       await refreshNodeModules();
