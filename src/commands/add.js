@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
 import {
   execAsync,
-  refreshNodeModules,
-  syncConfigWithDependencies,
+  syncNodeModulesSymlink,
+  syncKarmaWithNpmDeps,
 } from "../libs/index.js";
 
 export const registerAddPackage = (cli) => {
@@ -19,7 +19,7 @@ export const registerAddPackage = (cli) => {
       process.chdir(appBrahmaDir);
       await execAsync(`bun add ${packageName}`);
       process.chdir("../");
-      await syncConfigWithDependencies();
-      await refreshNodeModules();
+      await syncNodeModulesSymlink();
+      await syncKarmaWithNpmDeps();
     });
 };

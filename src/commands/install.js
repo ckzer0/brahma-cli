@@ -1,23 +1,34 @@
 import { existsSync } from "node:fs";
-import { execAsync, syncConfig, refreshNodeModules } from "../libs/index.js";
+import { cp } from "node:fs/promises";
+import {
+  execAsync,
+  getPath,
+  installKarma,
+  syncNodeModulesSymlink,
+} from "../libs/index.js";
+
+const copyBaseFiles = async () => {
+  const probeVSCodeConfigDir = getPath("../probe/base-files");
+  const localVSCodeConfigDir = `${process.cwd()}`;
+  await cp(probeVSCodeConfigDir, localVSCodeConfigDir, { recursive: true });
+};
 
 export const registerInstall = (cli) => {
   cli
     .command("install")
     .description(
-      "Installs or updates the configuration and packages based on maya config file"
+      "Installs or updates the configuration and packages based on karma config file"
     )
     .action(async () => {
-      syncConfig();
       if (!existsSync(".brahma")) {
-        throw new Error(`The sub-directory '.brahma' does not exist or is corrupted.
-          \nIf this is a valid Maya app directory, run 'brahma reset' command or create new maya app altogether\n\nError,`);
+        await copyBaseFiles();
       }
+      await installKarma();
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
       console.log("Running 'brahma install'.\nInstalling packages...");
       await execAsync("bun i");
       process.chdir("../");
-      await refreshNodeModules();
+      await syncNodeModulesSymlink();
     });
 };

@@ -1,6 +1,6 @@
 {
   "name": "@ckzer0/brahma-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Cli tool to generate and develop Maya apps",
   "type": "module",
   "author": "Chandan Kumar",

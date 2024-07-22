@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
 import {
   execAsync,
-  refreshNodeModules,
-  syncConfigWithDependencies,
+  syncNodeModulesSymlink,
+  syncKarmaWithNpmDeps,
 } from "../libs/index.js";
 
 export const registerRemovePackage = (cli) => {
@@ -22,7 +22,7 @@ export const registerRemovePackage = (cli) => {
       process.chdir(appBrahmaDir);
       await execAsync(`bun remove ${packageName}`);
       process.chdir("../");
-      await syncConfigWithDependencies();
-      await refreshNodeModules();
+      await syncNodeModulesSymlink();
+      await syncKarmaWithNpmDeps();
     });
 };
