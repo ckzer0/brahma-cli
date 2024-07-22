@@ -4,3 +4,4 @@ export * from "./create.js";
 export * from "./install.js";
 export * from "./remove.js";
 export * from "./stage.js";
+export * from "./publish.js";

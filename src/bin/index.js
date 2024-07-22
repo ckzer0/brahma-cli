@@ -6,6 +6,7 @@ import {
   registerAnythingElse,
   registerCreate,
   registerInstall,
+  registerPublish,
   registerRemovePackage,
   registerStage,
 } from "../commands/index.js";
@@ -19,6 +20,7 @@ registerInstall(cli);
 registerStage(cli);
 registerAddPackage(cli);
 registerRemovePackage(cli);
+registerPublish(cli);
 registerAnythingElse(cli);
 
 // Execute the CLI witht the given arguments

@@ -9,7 +9,7 @@ export const registerAddPackage = (cli) => {
   cli
     .command("add")
     .argument("<packageName>", "npm package name to be added to the maya app")
-    .description("adds an npm package to be used in the app")
+    .description("Adds an npm package to be used in the app")
     .action(async (packageName) => {
       if (!existsSync(".brahma")) {
         throw new Error(`The sub-directory '.brahma' does not exist or is corrupted.

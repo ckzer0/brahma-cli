@@ -12,7 +12,7 @@ export const registerRemovePackage = (cli) => {
       "<packageName>",
       "npm package name to be removed from app dependecnies"
     )
-    .description("removes the npm package from the app")
+    .description("Removes the npm package from the app")
     .action(async (packageName) => {
       if (!existsSync(".brahma")) {
         throw new Error(`The sub-directory '.brahma' does not exist or is corrupted.

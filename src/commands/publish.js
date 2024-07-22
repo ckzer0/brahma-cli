@@ -1,10 +1,10 @@
 import { existsSync } from "node:fs";
 import { execAsync } from "../libs/index.js";
 
-export const registerStage = (cli) => {
+export const registerPublish = (cli) => {
   cli
-    .command("stage")
-    .description("Builds the app in 'stage' mode for dev and testing")
+    .command("publish")
+    .description("Builds static files for production version of the app")
     .action(async () => {
       if (!existsSync(".brahma")) {
         throw new Error(`The sub-directory '.brahma' does not exist or is corrupted.
@@ -12,13 +12,8 @@ export const registerStage = (cli) => {
       }
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
-      console.log(
-        `App is being staged for dev and testing.
-        - click on 'Go Live' button at bottom of VSCode
-        - in the page opened in browser, click on 'stage'
-        - the app is being served on http://127.0.0.1:[port_number]/[staging_dir]\n\nPress Ctrl+C or Ctrl+\\ to exit\n`
-      );
-      await execAsync("bun run stage");
+      await execAsync("bun run publish");
       process.chdir("../");
+      console.log("App published successfully");
     });
 };
