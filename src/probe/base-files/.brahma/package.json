@@ -1,7 +1,7 @@
 {
   "name": "",
   "scripts": {
-    "stage": "bun --watch ./src/stage.ts",
+    "stage": "bun run ./src/stage.ts",
     "publish": "bun run ./src/publish.ts"
   },
   "type": "module",

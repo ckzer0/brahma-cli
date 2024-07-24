@@ -94,8 +94,6 @@ const installBrahmaConfig = async (
   oldKarmaBrahmaConfig,
   newKarmaBrahmaConfig
 ) => {
-  console.log(oldKarmaBrahmaConfig);
-  console.log(newKarmaBrahmaConfig);
   const localStageTsFile = `${process.cwd()}/.brahma/src/stage.ts`;
   const rawStageTsFileContent = readFileSync(localStageTsFile, "utf8");
   const localPublishTsFile = `${process.cwd()}/.brahma/src/publish.ts`;
@@ -141,8 +139,6 @@ const installBrahmaConfig = async (
   const newPublishDirPath = `${process.cwd()}/${newPublishDir}`;
 
   if (existsSync(prevSrcDirPath)) {
-    console.log("prevSrcDirPath", prevSrcDirPath);
-    console.log("newSrcDirPath", newSrcDirPath);
     await rename(prevSrcDirPath, newSrcDirPath);
   }
 

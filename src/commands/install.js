@@ -30,5 +30,6 @@ export const registerInstall = (cli) => {
       await execAsync("bun i");
       process.chdir("../");
       await syncNodeModulesSymlink();
+      await execAsync("brahma stage");
     });
 };

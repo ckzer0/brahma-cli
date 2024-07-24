@@ -3,6 +3,7 @@ const APP_SRC_DIRNAME = "app";
 const STAGING_DIRNAME = "stage";
 const PUBLISH_DIRNAME = "public";
 const TS_GLOBALS_FILENAME = "global.d.ts";
+const LIVE_SERVER_PORT = 5555;
 
 // DO NOT TOUCH (ONLY) THE NEXT LINE
 const config = {
@@ -10,7 +11,7 @@ const config = {
   npm: {
     appname: APP_NAME,
     packages: [
-      "@ckzero/maya::npm:@jsr/ckzero__maya@0.1.0",
+      "@ckzero/maya::npm:@jsr/ckzero__maya@0.1.8",
       "@ckzero/value-utils::npm:@jsr/ckzero__value-utils@^0.1.0",
     ],
   },
@@ -24,13 +25,29 @@ const config = {
   },
   vscode: {
     "files.exclude": {
-      ".brahma": false,
+      ".brahma": true,
       ".gitignore": true,
       node_modules: true,
       "tsconfig.json": true,
       [TS_GLOBALS_FILENAME]: true,
-      [STAGING_DIRNAME]: false,
+      [STAGING_DIRNAME]: true,
       [PUBLISH_DIRNAME]: false,
+    },
+    "liveServer.settings.root": `/${STAGING_DIRNAME}`,
+    "liveServer.settings.port": LIVE_SERVER_PORT,
+    "emeraldwalk.runonsave": {
+      commands: [
+        {
+          match: "karma.mjs",
+          isAsync: false,
+          cmd: "brahma install",
+        },
+        {
+          match: ".*",
+          isAsync: false,
+          cmd: "brahma stage",
+        },
+      ],
     },
   },
   tsconfig: {

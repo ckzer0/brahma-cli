@@ -13,10 +13,12 @@ export const registerStage = (cli) => {
       const appBrahmaDir = `${process.cwd()}/.brahma`;
       process.chdir(appBrahmaDir);
       console.log(
-        `App is being staged for dev and testing.
+        `App is staged for dev and testing.
+        - Make sure below VS Code extensions are installed,
+            • 'Live Server' (ritwickdey.LiveServer)
+            • 'Run on Save' (emeraldwalk.RunOnSave)
         - click on 'Go Live' button at bottom of VSCode
-        - in the page opened in browser, click on 'stage'
-        - the app is being served on http://127.0.0.1:[port_number]/[staging_dir]\n\nPress Ctrl+C or Ctrl+\\ to exit\n`
+        - the app is being served on http://127.0.0.1:[port_number]\n`
       );
       await execAsync("bun run stage");
       process.chdir("../");

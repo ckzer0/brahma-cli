@@ -19,13 +19,13 @@ export const registerCreate = (cli) => {
       await execAsync("brahma install");
       process.chdir("../");
       console.log(`App created in '${process.cwd()}/${appName}' directory
-      \n1. Run below commands to start development
-      - run 'cd ${appName}' to go to the app directory
-      - run 'code .' to open app directory in VS Code
-      - run 'brahma stage' (in any terminal, VSCode or external) to build the app in dev mode  
-      \n2. Open the app in VSCode
-      \n3. At VSCode bottombar, click 'Go Live' button to run the Live Server extension
-      \n4. When the app opens in browser, click on 'stage' to open the app
+      \n1. Open the app in VSCode
+      \n2. Make sure below VS Code extensions are installed,
+      • 'Live Server' (ritwickdey.LiveServer)
+      • 'Run on Save' (emeraldwalk.RunOnSave)
+      \n3. If you are installing extensions just now, run 'brahma stage' command after installation
+      \n4. At VSCode bottombar, click 'Go Live' button to run the Live Server extension
+      \n5. The app is being served on http://127.0.0.1:[port_number]
       \n\nHappy hacking :)
       `);
     });

@@ -1,15 +1,15 @@
-import { generateStaticHtml, getDefaultHtml } from "@ckzero/maya/web";
-import { readdir, lstat, rmdir, exists } from "fs/promises";
+import { generateStaticHtml } from "@ckzero/maya/web";
 import bun from "bun";
+import { exists, lstat, readdir, rmdir } from "fs/promises";
 
 let buildCallCounter = 0;
 let buildSrcDir: string;
 let buildDestDir: string;
 
-const HTML_FILE_SRC = "app.ts";
-const HTML_FILE_DEST = "index.html";
-const JS_FILE_SRC = "main.ts";
-const JS_FILE_DEST = "main.js";
+const SRC_HTML_FILENAME = "page.ts";
+const SRC_JS_FILENAME = "main.ts";
+const DEST_HTML_FILENAME = "index.html";
+const DEST_JS_FILENAME = "main.js";
 
 const NO_HTML_ERROR = "no html";
 const NO_JS_ERROR = "no js";
@@ -17,44 +17,44 @@ const NO_JS_ERROR = "no js";
 export const getJoinedPath = (rootDir: string, relativePath: string) =>
   `${rootDir}/${relativePath}`.replace("//", "/");
 
-const getFilesAndFolders = async (
+const getFileAndDirNames = async (
   currentRelativePath: string
-): Promise<{
-  files: string[];
-  folders: string[];
-}> => {
+): Promise<{ fileNames: string[]; dirNames: string[] }> => {
   const currentFullPath = getJoinedPath(buildSrcDir, currentRelativePath);
-  const allFiles = await readdir(currentFullPath);
-  const files: string[] = [];
-  const folders: string[] = [];
+  const childFilesOrDirs = await readdir(currentFullPath);
+  const fileNames: string[] = [];
+  const dirNames: string[] = [];
 
-  for await (const fileOrFolder of allFiles) {
-    if (fileOrFolder.charAt(0) === "_") continue;
+  for await (const childFileOrDir of childFilesOrDirs) {
+    if (childFileOrDir.charAt(0) === "@") continue;
 
-    const childFullPath = getJoinedPath(currentFullPath, fileOrFolder);
-    const fileIsDir = (await lstat(childFullPath)).isDirectory();
+    const childFullPath = getJoinedPath(currentFullPath, childFileOrDir);
+    const childFileIsDir = (await lstat(childFullPath)).isDirectory();
 
-    if (fileIsDir) folders.push(fileOrFolder);
-    else files.push(fileOrFolder);
+    if (childFileIsDir) dirNames.push(childFileOrDir);
+    else fileNames.push(childFileOrDir);
   }
 
-  return { files, folders };
+  return { fileNames, dirNames };
 };
 
-const buildHtml = async (htmlSrc: string, htmlDest: string) => {
-  console.log(`building ${htmlSrc} -> ${htmlDest}`);
-  const { app } = await import(htmlSrc);
-  const appOuterHtml = generateStaticHtml(app);
-  const html = getDefaultHtml(appOuterHtml);
+const buildHtml = async (srcHtmlPath: string, destHtmlPath: string) => {
+  const { page } = await import(srcHtmlPath);
+  const pageHtml = generateStaticHtml(page);
+  const html = `<!DOCTYPE html>\n${pageHtml}`;
   if (!html) throw new Error(NO_HTML_ERROR);
 
-  await bun.write(htmlDest, html);
+  await bun.write(destHtmlPath, html);
 };
 
-const buildJs = async (jsSrc: string, jsDest: string, destDir: string) => {
+const buildJs = async (
+  srcJsPath: string,
+  destJsPath: string,
+  destDirPath: string
+) => {
   const jsBuild = await bun.build({
-    entrypoints: [jsSrc],
-    outdir: destDir,
+    entrypoints: [srcJsPath],
+    outdir: destDirPath,
     splitting: true,
   });
   const js = await jsBuild.outputs.map(async (o) => await o.text())[0];
@@ -63,51 +63,48 @@ const buildJs = async (jsSrc: string, jsDest: string, destDir: string) => {
     throw new Error(NO_JS_ERROR);
   }
 
-  await bun.write(jsDest, js);
+  await bun.write(destJsPath, js);
 };
 
-const buildFiles = async (relativePath: string, files: string[]) => {
-  const srcDir = getJoinedPath(buildSrcDir, relativePath);
-  const destDir = getJoinedPath(buildDestDir, relativePath);
+const buildFiles = async (relativePath: string, fileNames: string[]) => {
+  const srcDirPath = getJoinedPath(buildSrcDir, relativePath);
+  const destDirPath = getJoinedPath(buildDestDir, relativePath);
 
-  const re = /(?:\.([^.]+))?$/;
-  for await (const file of files) {
-    if (file === HTML_FILE_SRC) {
-      const htmlSrc = getJoinedPath(srcDir, HTML_FILE_SRC);
-      const htmlDest = getJoinedPath(destDir, HTML_FILE_DEST);
-      await buildHtml(htmlSrc, htmlDest);
+  const fileExtRegex = /(?:\.([^.]+))?$/;
+  for await (const fileName of fileNames) {
+    if (fileName === SRC_HTML_FILENAME) {
+      const srcHtmlPath = getJoinedPath(srcDirPath, SRC_HTML_FILENAME);
+      const destHtmlPath = getJoinedPath(destDirPath, DEST_HTML_FILENAME);
+      await buildHtml(srcHtmlPath, destHtmlPath);
       continue;
     }
 
-    if (file === JS_FILE_SRC) {
-      const jsSrc = getJoinedPath(srcDir, JS_FILE_SRC);
-      const jsDest = getJoinedPath(destDir, JS_FILE_DEST);
-      await buildJs(jsSrc, jsDest, destDir);
+    if (fileName === SRC_JS_FILENAME) {
+      const srcJsPath = getJoinedPath(srcDirPath, SRC_JS_FILENAME);
+      const destJsPath = getJoinedPath(destDirPath, DEST_JS_FILENAME);
+      await buildJs(srcJsPath, destJsPath, destDirPath);
       continue;
     }
 
-    const ext = re.exec(file)?.[1];
-    if (ext === "ts") continue;
+    const fileExtension = fileExtRegex.exec(fileName)?.[1];
+    if (fileExtension === "ts") continue;
 
-    const fileSrc = getJoinedPath(srcDir, file);
-    const fileDest = getJoinedPath(destDir, file);
+    const srcFilePath = getJoinedPath(srcDirPath, fileName);
+    const destFilePath = getJoinedPath(destDirPath, fileName);
 
-    const content = await bun.file(fileSrc).text();
-    await bun.write(fileDest, content);
+    const srcFile = bun.file(srcFilePath);
+    await bun.write(destFilePath, srcFile);
   }
 };
 
-const buildFolder = async (currentRelativePath: string) => {
-  if (currentRelativePath === "") {
-    console.log(`\nbuild called ${++buildCallCounter} times\n`);
-  }
-  const { files, folders } = await getFilesAndFolders(currentRelativePath);
+const buildDir = async (currentRelativePath: string) => {
+  const { fileNames, dirNames } = await getFileAndDirNames(currentRelativePath);
 
-  await buildFiles(currentRelativePath, files);
+  await buildFiles(currentRelativePath, fileNames);
 
-  for await (const folder of folders) {
-    const childRelativePath = getJoinedPath(currentRelativePath, folder);
-    buildFolder(childRelativePath);
+  for await (const dirName of dirNames) {
+    const childDirRelativePath = getJoinedPath(currentRelativePath, dirName);
+    buildDir(childDirRelativePath);
   }
 };
 
@@ -119,10 +116,9 @@ export const buildApp = async (
   buildDestDir = buildDestDirectory;
   const destExists = await exists(buildDestDir);
   if (destExists) {
-    console.log(`\nRemoving ${buildDestDir}\n`);
     await rmdir(buildDestDir, { recursive: true });
     const stillExists = await exists(buildDestDir);
     if (stillExists) throw new Error(`Failed to remove ${buildDestDir}`);
   }
-  await buildFolder("");
+  await buildDir("");
 };
