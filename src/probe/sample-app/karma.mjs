@@ -1,7 +1,7 @@
-const APP_NAME = "my-first-maya-app";
-const APP_SRC_DIRNAME = "app";
-const STAGING_DIRNAME = "stage";
-const PUBLISH_DIRNAME = "public";
+export const APP_NAME = "my-first-maya-app";
+export const APP_SRC_DIRNAME = "app";
+export const STAGING_DIRNAME = "stage";
+export const PUBLISH_DIRNAME = "public";
 const TS_GLOBALS_FILENAME = "global.d.ts";
 const LIVE_SERVER_PORT = 5555;
 
@@ -32,6 +32,7 @@ const config = {
     "editor.formatOnPaste": true,
     "files.exclude": {
       node_modules: true,
+      ".vscode": true,
       ".brahma": true,
       ".gitignore": true,
       "tsconfig.json": true,

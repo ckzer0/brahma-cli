@@ -22,11 +22,13 @@ const createOldKarmaCopy = async () => {
 export const registerInstall = (cli) => {
   cli
     .command("install")
-    .description(
-      "Installs or updates the configuration and packages based on karma config file"
+    .description("Installs the packages and files based on karma config")
+    .option(
+      "-r, --refresh",
+      "install packages and files after deleting and re-installing the base files"
     )
-    .action(async () => {
-      if (!existsSync(".brahma")) {
+    .action(async (options) => {
+      if (!existsSync(".brahma") || options.refresh) {
         await copyBaseFiles();
         await createOldKarmaCopy();
       }
