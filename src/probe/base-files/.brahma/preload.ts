@@ -1,8 +1,7 @@
 import { JSDOM } from "jsdom";
 
-const {
-  window: { document, MutationObserver },
-} = new JSDOM();
+const jsdom = new JSDOM();
 
-global.document = document;
-global.MutationObserver = MutationObserver;
+global.window = jsdom.window as any;
+global.document = jsdom.window.document;
+global.MutationObserver = jsdom.window.MutationObserver;

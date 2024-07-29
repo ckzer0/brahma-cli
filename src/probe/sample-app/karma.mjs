@@ -5,14 +5,12 @@ const PUBLISH_DIRNAME = "public";
 const TS_GLOBALS_FILENAME = "global.d.ts";
 const LIVE_SERVER_PORT = 5555;
 
-// DO NOT TOUCH (ONLY) THE NEXT LINE
 const config = {
-  // you can edit below lines the way you want
   npm: {
     appname: APP_NAME,
     packages: [
       "@ckzero/maya::npm:@jsr/ckzero__maya@0.1.8",
-      "@ckzero/value-utils::npm:@jsr/ckzero__value-utils@^0.1.0",
+      "@ckzero/value-utils::npm:@jsr/ckzero__value-utils@0.1.0",
     ],
   },
   brahma: {
@@ -21,13 +19,21 @@ const config = {
     publishDir: PUBLISH_DIRNAME,
   },
   git: {
-    ignoreList: [".brahma", "node_modules", "stage", ".env", ".DS_Store"],
+    ignore: [
+      "node_modules",
+      ".brahma",
+      ".env",
+      ".DS_Store",
+      `${STAGING_DIRNAME}`,
+    ],
   },
   vscode: {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "files.exclude": {
+      node_modules: true,
       ".brahma": true,
       ".gitignore": true,
-      node_modules: true,
       "tsconfig.json": true,
       [TS_GLOBALS_FILENAME]: true,
       [STAGING_DIRNAME]: true,
@@ -74,5 +80,4 @@ const config = {
   },
 };
 
-// DO NOT TOUCH (ONLY) THE NEXT LINE
 export default config;

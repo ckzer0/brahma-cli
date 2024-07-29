@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { cp } from "node:fs/promises";
+import { copyFile, cp } from "node:fs/promises";
 import {
   execAsync,
   getPath,
@@ -13,6 +13,12 @@ const copyBaseFiles = async () => {
   await cp(probeVSCodeConfigDir, localVSCodeConfigDir, { recursive: true });
 };
 
+const createOldKarmaCopy = async () => {
+  const localKarmaFile = `${process.cwd()}/karma.mjs`;
+  const oldKarmaFile = `${process.cwd()}/.brahma/old-karma.mjs`;
+  await copyFile(localKarmaFile, oldKarmaFile);
+};
+
 export const registerInstall = (cli) => {
   cli
     .command("install")
@@ -22,6 +28,7 @@ export const registerInstall = (cli) => {
     .action(async () => {
       if (!existsSync(".brahma")) {
         await copyBaseFiles();
+        await createOldKarmaCopy();
       }
       await installKarma();
       const appBrahmaDir = `${process.cwd()}/.brahma`;

@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { copyFile, rename, rm, symlink } from "node:fs/promises";
-
-const KARMA_FILE_SPLITTER = "// DO NOT TOUCH (ONLY) THE NEXT LINE";
+import { replaceAll } from "./utils.js";
 
 export const syncNodeModulesSymlink = async () => {
   const brahmaNodeModulesDir = `${process.cwd()}/.brahma/node_modules`;
@@ -15,10 +14,10 @@ export const syncNodeModulesSymlink = async () => {
 export const syncKarmaWithNpmDeps = async () => {
   const currentKarmaFile = `${process.cwd()}/karma.mjs`;
   const currentKarmaFileContent = readFileSync(currentKarmaFile, "utf8");
-  const currentKarmaConfig = await import(currentKarmaFile);
+  const { default: currentKarmaConfig } = await import(currentKarmaFile);
   const {
     npm: { packages },
-  } = currentKarmaConfig.default;
+  } = currentKarmaConfig;
   const localNpmPackageJsonFile = `${process.cwd()}/.brahma/package.json`;
   const { dependencies } = JSON.parse(readFileSync(localNpmPackageJsonFile));
 
@@ -40,24 +39,25 @@ export const syncKarmaWithNpmDeps = async () => {
       removedPackages.push(pkg);
     }
   });
-  const updatedKarmaConfig = {
-    ...currentKarmaConfig,
-    npm: {
-      ...currentKarmaConfig.npm,
-      packages: [
-        ...packages.filter((pkg) => !removedPackages.includes(pkg)),
-        ...addedPackages,
-      ],
-    },
-  };
+  const oldPackages = currentKarmaConfig["npm"]["packages"];
+  const newPackages = [
+    ...packages.filter((pkg) => !removedPackages.includes(pkg)),
+    ...addedPackages,
+  ];
+  const oldPackagesString =
+    " packages: " +
+    replaceAll(JSON.stringify(oldPackages, null, 2), "  ", " ").replace(
+      "\n]",
+      ",\n ]"
+    );
+  const newPackagesString = " packages: " + JSON.stringify(newPackages);
+  const newKarmaFileContent = replaceAll(
+    currentKarmaFileContent,
+    "  ",
+    " "
+  ).replace(oldPackagesString, newPackagesString);
 
-  const splits = currentKarmaFileContent.split(KARMA_FILE_SPLITTER);
-  const oldConfigContent = splits[0] + "@@" + splits[2];
-  const updatedKarmaFileContent = oldConfigContent.replace(
-    "@@",
-    `const config = ${JSON.stringify(updatedKarmaConfig, null, 2)};`
-  );
-  writeFileSync(currentKarmaFile, updatedKarmaFileContent, null, 2);
+  writeFileSync(currentKarmaFile, newKarmaFileContent, null, 2);
 };
 
 const installVsCodeConfig = (karmaVsCodeConfig) => {
@@ -82,7 +82,7 @@ const installTsConfig = (karmaTsConfig) => {
 
 const installGitConfig = (karmaGitConfig) => {
   const localGitIgnoreFile = `${process.cwd()}/.gitignore`;
-  const gitIgnoreContent = karmaGitConfig.ignoreList
+  const gitIgnoreContent = karmaGitConfig.ignore
     .reverse()
     .reduce((content, item) => {
       return `${item}\n${content}`;

@@ -12,3 +12,13 @@ export const execAsync = async (shellCommand) => {
     console.log(err);
   }
 };
+
+export const replaceAll = (str, pattern, replaceWith) => {
+  if (str.includes(pattern))
+    return replaceAll(
+      str.replaceAll(pattern, replaceWith),
+      pattern,
+      replaceWith
+    );
+  else return str;
+};
