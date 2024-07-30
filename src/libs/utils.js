@@ -3,11 +3,12 @@ import util from "node:util";
 
 const execute = util.promisify(nodeExec);
 
-export const execAsync = async (shellCommand) => {
+export const execAsync = async (shellCommand, ignoreLogs) => {
   try {
-    const { stdout, stderr } = await execute(shellCommand);
-    console.log(stdout);
-    console.error(stderr);
+    const { stdout } = await execute(shellCommand);
+    if (!ignoreLogs) {
+      console.log(stdout);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -22,3 +23,12 @@ export const replaceAll = (str, pattern, replaceWith) => {
     );
   else return str;
 };
+
+export const instructions = (rootDir, portNumber) => `
+  - Open VSCode with root directory - ${rootDir}
+  - Make sure below VS Code extensions are installed,
+      • 'Live Server' (ritwickdey.LiveServer)
+      • 'Run on Save' (emeraldwalk.RunOnSave)
+  - If you installed the extensions just now, run 'brahma stage' command in the terminal
+  - At VSCode bottombar, click on 'Go Live' button to run the Live Server extension
+  - The app is being served at http://127.0.0.1:${portNumber}`;

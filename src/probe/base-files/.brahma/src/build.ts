@@ -2,7 +2,6 @@ import { generateStaticHtml } from "@ckzero/maya/web";
 import bun from "bun";
 import { exists, lstat, readdir, rmdir } from "fs/promises";
 
-let buildCallCounter = 0;
 let buildSrcDir: string;
 let buildDestDir: string;
 

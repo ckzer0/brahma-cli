@@ -197,3 +197,11 @@ export const installKarma = async () => {
   installNpmPackageJson(karmaNpmConfig);
   await copyFile(currentKarmaFile, oldKarmaFile);
 };
+
+export const getPortNumber = async () => {
+  const currentKarmaFile = `${process.cwd()}/karma.mjs`;
+  const { default: currentKarmaConfig } = await import(currentKarmaFile);
+  const { vscode } = currentKarmaConfig;
+
+  return vscode["liveServer.settings.port"];
+};
