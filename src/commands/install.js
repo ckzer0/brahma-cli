@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { copyFile, cp } from "node:fs/promises";
+import { copyFile, cp, rename } from "node:fs/promises";
 import {
   execAsync,
   getPath,
@@ -11,6 +11,9 @@ const copyBaseFiles = async () => {
   const probeVSCodeConfigDir = getPath("../probe/base-files");
   const localVSCodeConfigDir = `${process.cwd()}`;
   await cp(probeVSCodeConfigDir, localVSCodeConfigDir, { recursive: true });
+  const npmrcFile = `${process.cwd()}/.brahma/npmrc`;
+  const dotNpmrcFile = `${process.cwd()}/.brahma/.npmrc`;
+  await rename(npmrcFile, dotNpmrcFile);
 };
 
 const createOldKarmaCopy = async () => {
